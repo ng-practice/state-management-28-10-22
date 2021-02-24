@@ -3,9 +3,6 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { createBookStart } from '@store/book';
-import { Subscription } from 'rxjs';
-import { tap } from 'rxjs/operators';
-import { BookApiService } from '../book-api.service';
 import { bookNa } from '../models';
 
 @Component({
@@ -22,21 +19,15 @@ export class BookNewComponent implements OnDestroy {
     private fb: FormBuilder,
     private store: Store,
     private bookService: BookApiService
-  ) {}
-
-  ngOnDestroy() {
-    this.sink.unsubscribe();
+  ) {
+    this.form = this.buildForm();
+  }
+  ngOnDestroy(): void {
+    throw new Error('Method not implemented.');
   }
 
   create() {
     const book = { ...bookNa(), ...this.form.value };
-
-    this.sink.add(
-      this.bookService
-        .create(book)
-        .pipe(tap(() => this.router.navigateByUrl('/')))
-        .subscribe()
-    );
 
     this.store.dispatch(createBookStart({ book }));
   }
