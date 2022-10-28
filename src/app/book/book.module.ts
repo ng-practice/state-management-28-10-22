@@ -16,7 +16,7 @@ import { BookListComponent } from './book-list/book-list.component';
 import { BookNewComponent } from './book-new/book-new.component';
 import { BookRoutingModule } from './book-routing.module';
 import { BookComponent } from './book.component';
-import { bookCollectionReducer, bookFeatureKey } from './store';
+import { bookFeatureKey, bookReducers as bookFeatureReducers } from './store';
 
 @NgModule({
   imports: [
@@ -33,7 +33,7 @@ import { bookCollectionReducer, bookFeatureKey } from './store';
     MatInputModule,
     MatListModule,
 
-    StoreModule.forFeature(bookFeatureKey, bookCollectionReducer)
+    StoreModule.forFeature(bookFeatureKey, bookFeatureReducers)
   ],
   declarations: [
     BookComponent,

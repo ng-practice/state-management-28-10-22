@@ -1,16 +1,16 @@
 import { createReducer, on } from '@ngrx/store';
 import { createBookStart } from './book-collection.actions';
-import { BookCollectionFeature } from './book-collection.feature';
+import { BookCollectionSlice } from './book-collection.feature';
 
-const initialState: BookCollectionFeature = {
+const initialState: BookCollectionSlice = {
   entities: []
 };
 
-export const bookCollectionReducer = createReducer<BookCollectionFeature>(
+export const bookCollectionReducer = createReducer<BookCollectionSlice>(
   initialState,
   on(
     createBookStart,
-    (state, action): BookCollectionFeature => {
+    (state, action): BookCollectionSlice => {
       const nextState = { ...state };
 
       nextState.entities = [...nextState.entities, action.book];
