@@ -1,19 +1,30 @@
 import { createReducer, on } from '@ngrx/store';
-import { bookActions, createBookStart } from './book-collection.actions';
+import { bookActions, createBookComplete } from './book-collection.actions';
 import { BookCollectionSlice } from './book-collection.feature';
 
 const initialState: BookCollectionSlice = {
-  entities: []
+  entities: [],
+  isLoading: false
 };
 
 export const bookCollectionReducer = createReducer<BookCollectionSlice>(
   initialState,
   on(
-    createBookStart,
+    createBookComplete,
     (state, action): BookCollectionSlice => {
       const nextState = { ...state };
 
-      nextState.entities = [...nextState.entities, action.book];
+      nextState.entities = [action.book, ...nextState.entities];
+
+      return nextState;
+    }
+  ),
+  on(
+    bookActions.loadingstarted,
+    (state): BookCollectionSlice => {
+      const nextState = { ...state };
+
+      nextState.isLoading = true;
 
       return nextState;
     }
@@ -24,6 +35,7 @@ export const bookCollectionReducer = createReducer<BookCollectionSlice>(
       const nextState = { ...state };
 
       nextState.entities = action.books;
+      nextState.isLoading = false;
 
       return nextState;
     }

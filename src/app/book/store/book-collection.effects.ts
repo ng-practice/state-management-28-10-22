@@ -1,12 +1,21 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { exhaustMap, map } from 'rxjs';
+import { exhaustMap, map, tap } from 'rxjs';
 import { BookApiService } from '../book-api.service';
-import { bookActions } from './book-collection.actions';
+import { bookActions, createBookComplete, createBookStart } from './book-collection.actions';
 
 @Injectable()
 export class BookCollectionEffects {
-  load$ = createEffect(() => {
+  create$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(createBookStart),
+      exhaustMap(action => this.bookApiService.create(action.book)),
+      map(book => createBookComplete({ book }))
+    );
+  });
+
+  loadBooks$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(bookActions.loadingstarted),
       exhaustMap(() => this.bookApiService.getAll()),
@@ -14,5 +23,15 @@ export class BookCollectionEffects {
     );
   });
 
-  constructor(private actions$: Actions, private bookApiService: BookApiService) {}
+  navigateToStart$ = createEffect(
+    () => {
+      return this.actions$.pipe(
+        ofType(createBookComplete),
+        tap(() => this.router.navigateByUrl('/'))
+      );
+    },
+    { dispatch: false }
+  );
+
+  constructor(private actions$: Actions, private router: Router, private bookApiService: BookApiService) {}
 }

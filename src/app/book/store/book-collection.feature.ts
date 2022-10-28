@@ -10,6 +10,7 @@ export interface BookFeatureState {
 
 export interface BookCollectionSlice {
   entities: ReadonlyArray<Book>;
+  isLoading: boolean;
 }
 
 export const bookReducers: ActionReducerMap<BookFeatureState> = {
