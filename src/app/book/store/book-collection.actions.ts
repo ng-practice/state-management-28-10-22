@@ -8,6 +8,6 @@ export const bookActions = createActionGroup({
   source: 'Book',
   events: {
     loadingStarted: emptyProps(),
-    loadingCompleted: props<{ books: ReadonlyArray<Book> }>()
+    loadingCompleted: props<{ books: Book[] }>()
   }
 });

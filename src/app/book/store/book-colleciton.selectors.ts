@@ -1,12 +1,15 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
+import { selectRouteParam } from '../../router/store';
 import { bookFeatureKey, BookFeatureState } from './book-collection.feature';
+import { adapter } from './book-collection.reducer';
 
 const bookFeature = createFeatureSelector<BookFeatureState>(bookFeatureKey);
+const bookCollectionSlice = createSelector(bookFeature, feature => feature.bookCollectionSlice);
 
-export const bookCollection = createSelector(bookFeature, feature => feature.bookCollectionSlice.entities);
+const { selectAll, selectEntities } = adapter.getSelectors(bookCollectionSlice);
 
-export const bookByIsbn = (isbn: string) =>
-  createSelector(
-    bookFeature,
-    feature => feature.bookCollectionSlice.entities.find(entity => entity.isbn === isbn) || null
-  );
+export const bookCollection = selectAll;
+
+export const bookByIsbn = createSelector(selectRouteParam('isbn'), selectEntities, (isbn, entities) =>
+  isbn ? entities[isbn] || null : null
+);
